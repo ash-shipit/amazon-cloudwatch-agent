@@ -33,6 +33,8 @@ var runInAws = os.Getenv(config.RUN_IN_AWS)
 var runWithIrsa = os.Getenv(config.RUN_WITH_IRSA)
 
 func DetectAgentMode(configuredMode string) string {
+	fmt.Printf("I! Mode configured %s\n", configuredMode)
+
 	if configuredMode != "auto" {
 		return configuredMode
 	}
