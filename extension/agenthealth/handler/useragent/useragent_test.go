@@ -10,6 +10,7 @@ import (
 	telegraf "github.com/influxdata/telegraf/config"
 	"github.com/influxdata/telegraf/models"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/awsemfexporter"
+	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/jmxreceiver"
 	"github.com/stretchr/testify/assert"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/otelcol"
@@ -136,6 +137,38 @@ func TestEmf(t *testing.T) {
 	assert.Equal(t, "inputs:(nop run_as_user)", ua.inputsStr.Load())
 	assert.Equal(t, "", ua.processorsStr.Load())
 	assert.Equal(t, "outputs:(application_signals awsemf)", ua.outputsStr.Load())
+}
+
+func TestJmx(t *testing.T) {
+	metricsType, _ := component.NewType("metrics")
+	nopType, _ := component.NewType("nop")
+	jmxType, _ := component.NewType("jmx")
+	otelCfg := &otelcol.Config{
+		Service: service.Config{
+			Pipelines: map[component.ID]*pipelines.PipelineConfig{
+				component.NewID(metricsType): {
+					Receivers: []component.ID{
+						component.NewID(jmxType),
+					},
+					Exporters: []component.ID{
+						component.NewID(nopType),
+					},
+				},
+			},
+		},
+		Receivers: map[component.ID]component.Config{
+			component.NewID(jmxType): &jmxreceiver.Config{TargetSystem: "jvm,tomcat"},
+		},
+	}
+	ua := newUserAgent()
+	ua.SetComponents(otelCfg, &telegraf.Config{})
+	assert.Len(t, ua.inputs, 4)
+	assert.Len(t, ua.processors, 0)
+	assert.Len(t, ua.outputs, 1)
+
+	assert.Equal(t, "inputs:(jmx jmx-jvm jmx-tomcat run_as_user)", ua.inputsStr.Load())
+	assert.Equal(t, "", ua.processorsStr.Load())
+	assert.Equal(t, "outputs:(nop)", ua.outputsStr.Load())
 }
 
 func TestSingleton(t *testing.T) {
