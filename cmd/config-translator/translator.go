@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	exitErrorMessage   = "Configuration validation first phase failed. Agent version: %v. Verify the JSON input is only using features supported by this version.\n"
+	exitErrorMessage   = "Configuration validation first phase failed. Agent version: %v. Verify the JSON input is only using features supported by this version. %v %v\n"
 	exitSuccessMessage = "Configuration validation first phase succeeded"
 	version            = "1.0"
 	envConfigFileName  = "env-config.json"
@@ -89,7 +89,7 @@ func main() {
 			for _, errMessage := range translator.ErrorMessages {
 				log.Println(errMessage)
 			}
-			log.Printf(exitErrorMessage, version)
+			log.Printf(exitErrorMessage, version, r, translator.ErrorMessages)
 			os.Exit(1)
 		}
 	}()
