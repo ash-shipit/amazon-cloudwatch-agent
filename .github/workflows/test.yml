@@ -60,7 +60,7 @@ jobs:
       contents: read
     secrets: inherit
     with:
-      test-cluster-name: 'test'
+      test-cluster-name: 'e2e-cw-agent-test'
 
   EC2EndToEndTest:
     name: "AppSignals E2E EC2 Test"
