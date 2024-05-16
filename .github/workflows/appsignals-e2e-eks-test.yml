@@ -27,6 +27,7 @@ env:
   METRIC_NAMESPACE: AppSignals
   LOG_GROUP_NAME: /aws/appsignals/eks
   ECR_INTEGRATION_TEST_REPO: "cwagent-integration-test"
+  CW_AGENT_IMAGE_RELEASE_VERSION: public.ecr.aws/y8s3a7r9/cloudwatch-agent:latest
 
 jobs:
   appsignals-e2e-test:
@@ -129,7 +130,7 @@ jobs:
 
       - name: Patch the CloudWatch Agent image and restart CloudWatch pods
         run: |
-          kubectl patch amazoncloudwatchagents -n amazon-cloudwatch cloudwatch-agent --type='json' -p='[{"op": "replace", "path": "/spec/image", "value": ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/${{ env.ECR_INTEGRATION_TEST_REPO }}:0c27b1d0d4e6a9288f0eeea1c61d0ce3413efefa}]'
+          kubectl patch amazoncloudwatchagents -n amazon-cloudwatch cloudwatch-agent --type='json' -p='[{"op": "replace", "path": "/spec/image", "value": "${{ env.CW_AGENT_IMAGE_RELEASE_VERSION }}"}]'
           kubectl delete pods --all -n amazon-cloudwatch
           kubectl wait --for=condition=Ready pod --all -n amazon-cloudwatch
 

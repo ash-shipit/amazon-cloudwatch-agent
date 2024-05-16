@@ -53,6 +53,7 @@ jobs:
 
   EKSEndToEndTest:
     name: "AppSignals E2E EKS Test"
+#    needs: [ BuildAndUpload, BuildDocker ]
     uses: ./.github/workflows/appsignals-e2e-eks-test.yml
     permissions:
       id-token: write
