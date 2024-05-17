@@ -64,7 +64,7 @@ jobs:
 
   EC2EndToEndTest:
     name: "AppSignals E2E EC2 Test"
-    needs: [ BuildAndUpload, BuildDocker ]
+#    needs: [ BuildAndUpload, BuildDocker ]
     uses: ./.github/workflows/appsignals-e2e-ec2-test.yml
     permissions:
       id-token: write
