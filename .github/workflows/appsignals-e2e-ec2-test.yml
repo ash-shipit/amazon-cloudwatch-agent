@@ -19,7 +19,7 @@ env:
   SAMPLE_APP_FRONTEND_SERVICE_JAR: "s3://aws-appsignals-sample-app-prod-us-east-1/main-service.jar"
   SAMPLE_APP_REMOTE_SERVICE_JAR: "s3://aws-appsignals-sample-app-prod-us-east-1/remote-service.jar"
   GET_ADOT_JAR_COMMAND: "wget -O adot.jar https://github.com/aws-observability/aws-otel-java-instrumentation/releases/latest/download/aws-opentelemetry-agent.jar"
-  GET_CW_AGENT_RPM_COMMAND: "aws s3 cp s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm ./cw-agent.rpm"
+  GET_CW_AGENT_RPM_COMMAND: "aws s3 cp s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/0c27b1d0d4e6a9288f0eeea1c61d0ce3413efefa/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm ./cw-agent.rpm"
   METRIC_NAMESPACE: AppSignals
   LOG_GROUP_NAME: /aws/appsignals/generic
 
