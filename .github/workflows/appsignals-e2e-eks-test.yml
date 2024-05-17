@@ -129,7 +129,7 @@ jobs:
 
       - name: Patch the CloudWatch Agent image and restart CloudWatch pods
         run: |
-          kubectl patch amazoncloudwatchagents -n amazon-cloudwatch cloudwatch-agent --type='json' -p='[{"op": "replace", "path": "/spec/image", "value": ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/${{ env.ECR_INTEGRATION_TEST_REPO }}:0c27b1d0d4e6a9288f0eeea1c61d0ce3413efefa}]'
+          kubectl patch amazoncloudwatchagents -n amazon-cloudwatch cloudwatch-agent --type='json' -p='[{"op": "replace", "path": "/spec/image", "value": ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/${{ env.ECR_INTEGRATION_TEST_REPO }}:00ef994d0feaa8ebe03da61cd9fcfcc1f20ca650}]'
           kubectl delete pods --all -n amazon-cloudwatch
           kubectl wait --for=condition=Ready pod --all -n amazon-cloudwatch
 
@@ -146,6 +146,7 @@ jobs:
         run: |
           echo "REMOTE_SERVICE_DEPLOYMENT_NAME=$(kubectl get deployments -n ${{ env.SAMPLE_APP_NAMESPACE }} --selector=app=remote-app -o jsonpath='{.items[0].metadata.name}')" >> $GITHUB_ENV
           echo "REMOTE_SERVICE_POD_IP=$(kubectl get pods -n ${{ env.SAMPLE_APP_NAMESPACE }} --selector=app=remote-app -o jsonpath='{.items[0].status.podIP}')" >> $GITHUB_ENV
+          echo "MAIN_SERVICE_INSTANCE_ID=$(terraform output main_service_instance_id)" >> $GITHUB_ENV
 
       - name: Log pod ADOT image ID
         run: |
