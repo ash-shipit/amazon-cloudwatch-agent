@@ -62,11 +62,12 @@ jobs:
     with:
       test-cluster-name: 'e2e-cw-agent-test'
 
-#  EC2EndToEndTest:
-#    name: "AppSignals E2E EC2 Test"
-#    needs: [ BuildAndUpload, BuildDocker ]
-#    uses: ./.github/workflows/appsignals-e2e-ec2-test.yml
-#    permissions:
-#      id-token: write
-#      contents: read
-#    secrets: inherit
+  EC2EndToEndTest:
+    name: "AppSignals E2E EC2 Test"
+    needs: [ BuildAndUpload, BuildDocker ]
+    uses: ./.github/workflows/appsignals-e2e-ec2-test.yml
+    permissions:
+      id-token: write
+      contents: read
+    secrets: inherit
+
