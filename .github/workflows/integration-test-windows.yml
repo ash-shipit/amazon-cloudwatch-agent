@@ -1,7 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: MIT
 
-name: Run Integration Tests
+name: Run Integration Tests Windows
 env:
   PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
   TERRAFORM_AWS_ASSUME_ROLE: ${{ vars.TERRAFORM_AWS_ASSUME_ROLE }}
