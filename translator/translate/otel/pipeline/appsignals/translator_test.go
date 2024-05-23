@@ -132,6 +132,28 @@ func TestTranslatorMetricsForKubernetes(t *testing.T) {
 			detector:   eksdetector.TestEKSDetector,
 			isEKSCache: eksdetector.TestIsEKSCacheEKS,
 		},
+		"WithAppSignalsAndLoggingEnabled": {
+			input: map[string]interface{}{
+				"agent": map[string]interface{}{
+					"debug": true,
+				},
+				"logs": map[string]interface{}{
+					"metrics_collected": map[string]interface{}{
+						"app_signals": map[string]interface{}{
+							"enabled": true,
+						},
+					},
+				},
+			},
+			want: &want{
+				receivers:  []string{"otlp/application_signals"},
+				processors: []string{"resourcedetection", "awsapplicationsignals"},
+				exporters:  []string{"logging/application_signals", "awsemf/application_signals"},
+				extensions: []string{"agenthealth/logs"},
+			},
+			detector:   eksdetector.TestEKSDetector,
+			isEKSCache: eksdetector.TestIsEKSCacheEKS,
+		},
 		"WithAppSignalsEnabledK8s": {
 			input: map[string]interface{}{
 				"logs": map[string]interface{}{
@@ -202,6 +224,28 @@ func TestTranslatorMetricsForEC2(t *testing.T) {
 				receivers:  []string{"otlp/application_signals"},
 				processors: []string{"resourcedetection", "awsapplicationsignals"},
 				exporters:  []string{"awsemf/application_signals"},
+				extensions: []string{"agenthealth/logs"},
+			},
+			detector:   eksdetector.TestEKSDetector,
+			isEKSCache: eksdetector.TestIsEKSCacheEKS,
+		},
+		"WithAppSignalsAndLoggingEnabled": {
+			input: map[string]interface{}{
+				"agent": map[string]interface{}{
+					"debug": true,
+				},
+				"logs": map[string]interface{}{
+					"metrics_collected": map[string]interface{}{
+						"app_signals": map[string]interface{}{
+							"enabled": true,
+						},
+					},
+				},
+			},
+			want: &want{
+				receivers:  []string{"otlp/application_signals"},
+				processors: []string{"resourcedetection", "awsapplicationsignals"},
+				exporters:  []string{"logging/application_signals", "awsemf/application_signals"},
 				extensions: []string{"agenthealth/logs"},
 			},
 			detector:   eksdetector.TestEKSDetector,
