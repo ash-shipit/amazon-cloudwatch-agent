@@ -6,7 +6,7 @@ ARG TARGETARCH=amd64
 ARG CONTAINER_CLOUDWATCHAGENT_PATH=C:\\Program\ Files\\Amazon\\AmazonCloudWatchAgent\\
 ARG CONTAINER_CLOUDWATCHAGENT_DATA_PATH=C:\\ProgramData\\Amazon\\AmazonCloudWatchAgent\\
 
-FROM mcr.microsoft.com/windows/servercore:$TAG as runtime
+FROM mcr.microsoft.com/windows/nanoserver:$TAG as runtime
 
 ARG CONTAINER_CLOUDWATCHAGENT_PATH
 ARG CONTAINER_CLOUDWATCHAGENT_DATA_PATH
