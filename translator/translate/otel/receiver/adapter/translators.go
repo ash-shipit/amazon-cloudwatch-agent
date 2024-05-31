@@ -33,7 +33,7 @@ const (
 var (
 	logKey           = common.ConfigKey(common.LogsKey, common.LogsCollectedKey)
 	metricKey        = common.ConfigKey(common.MetricsKey, common.MetricsCollectedKey)
-	skipInputSet     = collections.NewSet[string](common.JmxKey, files.SectionKey, windows_events.SectionKey)
+	skipInputSet     = collections.NewSet[string](common.PrometheusKey, common.JmxKey, files.SectionKey, windows_events.SectionKey)
 	multipleInputSet = collections.NewSet[string](
 		procstat.SectionKey,
 	)

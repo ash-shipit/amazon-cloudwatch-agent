@@ -35,6 +35,7 @@ import (
 	_ "github.com/aws/amazon-cloudwatch-agent/translator/translate/metrics/metrics_collect/netstat"
 	_ "github.com/aws/amazon-cloudwatch-agent/translator/translate/metrics/metrics_collect/processes"
 	_ "github.com/aws/amazon-cloudwatch-agent/translator/translate/metrics/metrics_collect/procstat"
+	_ "github.com/aws/amazon-cloudwatch-agent/translator/translate/metrics/metrics_collect/prometheus"
 	_ "github.com/aws/amazon-cloudwatch-agent/translator/translate/metrics/metrics_collect/statsd"
 	_ "github.com/aws/amazon-cloudwatch-agent/translator/translate/metrics/metrics_collect/swap"
 	_ "github.com/aws/amazon-cloudwatch-agent/translator/translate/metrics/rollup_dimensions"
