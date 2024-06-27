@@ -64,7 +64,7 @@ jobs:
 #
   ApplicationSignalsEndToEndTest:
     name: "Application Signals E2E Test"
-    needs: [ BuildAndUpload, BuildDocker ]
+#    needs: [ BuildAndUpload, BuildDocker ]
     uses: ./.github/workflows/application-signals-e2e-test.yml
     secrets: inherit
     permissions:
