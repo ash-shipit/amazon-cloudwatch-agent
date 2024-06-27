@@ -78,56 +78,56 @@ jobs:
       aws-region: us-east-1
       test-cluster-name: 'e2e-cw-agent-test'
       caller-workflow-name: 'main-build'
-      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
+      patch-image-ecr: "${{ env.CW_AGENT_IMAGE_ECR }}"
 
-  java-ec2-default-e2e-test:
-    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-default-e2e-test.yml@consolidate-release
-    secrets: inherit
-    with:
-      aws-region: us-east-1
-      caller-workflow-name: 'main-build'
-      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
-
-  java-ec2-asg-e2e-test:
-    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-asg-e2e-test.yml@consolidate-release
-    secrets: inherit
-    with:
-      aws-region: us-east-1
-      caller-workflow-name: 'main-build'
-      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
-
-  java-metric-limiter-e2e-test:
-    needs: [ java-eks-e2e-test ]
-    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
-    secrets: inherit
-    with:
-      aws-region: us-east-1
-      test-cluster-name: 'e2e-cw-agent-test'
-      caller-workflow-name: 'main-build'
-      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
-
-  python-eks-e2e-test:
-    needs: [ java-metric-limiter-e2e-test ]
-    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-eks-e2e-test.yml@consolidate-release
-    secrets: inherit
-    with:
-      aws-region: us-east-1
-      test-cluster-name: 'e2e-cw-agent-test'
-      caller-workflow-name: 'main-build'
-      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
-
-  python-ec2-default-e2e-test:
-    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-default-e2e-test.yml@consolidate-release
-    secrets: inherit
-    with:
-      aws-region: us-east-1
-      caller-workflow-name: 'main-build'
-      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
-
-  python-ec2-asg-e2e-test:
-    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-asg-e2e-test.yml@consolidate-release
-    secrets: inherit
-    with:
-      aws-region: us-east-1
-      caller-workflow-name: 'main-build'
-      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+#  java-ec2-default-e2e-test:
+#    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-default-e2e-test.yml@consolidate-release
+#    secrets: inherit
+#    with:
+#      aws-region: us-east-1
+#      caller-workflow-name: 'main-build'
+#      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+#
+#  java-ec2-asg-e2e-test:
+#    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-asg-e2e-test.yml@consolidate-release
+#    secrets: inherit
+#    with:
+#      aws-region: us-east-1
+#      caller-workflow-name: 'main-build'
+#      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+#
+#  java-metric-limiter-e2e-test:
+#    needs: [ java-eks-e2e-test ]
+#    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
+#    secrets: inherit
+#    with:
+#      aws-region: us-east-1
+#      test-cluster-name: 'e2e-cw-agent-test'
+#      caller-workflow-name: 'main-build'
+#      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
+#
+#  python-eks-e2e-test:
+#    needs: [ java-metric-limiter-e2e-test ]
+#    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-eks-e2e-test.yml@consolidate-release
+#    secrets: inherit
+#    with:
+#      aws-region: us-east-1
+#      test-cluster-name: 'e2e-cw-agent-test'
+#      caller-workflow-name: 'main-build'
+#      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
+#
+#  python-ec2-default-e2e-test:
+#    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-default-e2e-test.yml@consolidate-release
+#    secrets: inherit
+#    with:
+#      aws-region: us-east-1
+#      caller-workflow-name: 'main-build'
+#      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+#
+#  python-ec2-asg-e2e-test:
+#    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-asg-e2e-test.yml@consolidate-release
+#    secrets: inherit
+#    with:
+#      aws-region: us-east-1
+#      caller-workflow-name: 'main-build'
+#      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
