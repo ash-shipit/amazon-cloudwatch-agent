@@ -18,6 +18,8 @@ env:
   S3_INTEGRATION_BUCKET_ITAR: ${{ vars.S3_INTEGRATION_BUCKET_ITAR }}
   TERRAFORM_AWS_ASSUME_ROLE_CN: ${{ vars.TERRAFORM_AWS_ASSUME_ROLE_CN }}
   S3_INTEGRATION_BUCKET_CN: ${{ vars.S3_INTEGRATION_BUCKET_CN }}
+  CW_AGENT_IMAGE_ECR: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}
+  CW_AGENT_RPM_BUCKET: "s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm"
 
 on:
   push:
@@ -51,15 +53,15 @@ jobs:
       BucketKey: "integration-test/binary/${{ github.sha }}"
       PackageBucketKey: "integration-test/packaging/${{ github.sha }}"
 
-  JavaEC2ASGEndToEndTest:
-    name: "AppSignals E2E EC2 Test"
-    needs: [ BuildAndUpload, BuildDocker ]
-    uses: ./.github/workflows/test-2.yml
-    permissions:
-      id-token: write
-      contents: read
-    secrets: inherit
-
+#  JavaEC2ASGEndToEndTest:
+#    name: "AppSignals E2E EC2 Test"
+#    needs: [ BuildAndUpload, BuildDocker ]
+#    uses: ./.github/workflows/test-2.yml
+#    permissions:
+#      id-token: write
+#      contents: read
+#    secrets: inherit
+#
 #  ApplicationSignalsEndToEndTest:
 #    name: "Application Signals E2E Test"
 #    needs: [ BuildAndUpload, BuildDocker ]
@@ -68,3 +70,64 @@ jobs:
 #    permissions:
 #      id-token: write
 #      contents: read
+
+  java-eks-e2e-test:
+    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
+    secrets: inherit
+    with:
+      aws-region: us-east-1
+      test-cluster-name: 'e2e-cw-agent-test'
+      caller-workflow-name: 'main-build'
+      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
+
+  java-ec2-default-e2e-test:
+    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-default-e2e-test.yml@consolidate-release
+    secrets: inherit
+    with:
+      aws-region: us-east-1
+      caller-workflow-name: 'main-build'
+      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+
+  java-ec2-asg-e2e-test:
+    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-asg-e2e-test.yml@consolidate-release
+    secrets: inherit
+    with:
+      aws-region: us-east-1
+      caller-workflow-name: 'main-build'
+      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+
+  java-metric-limiter-e2e-test:
+    needs: [ java-eks-e2e-test ]
+    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
+    secrets: inherit
+    with:
+      aws-region: us-east-1
+      test-cluster-name: 'e2e-cw-agent-test'
+      caller-workflow-name: 'main-build'
+      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
+
+  python-eks-e2e-test:
+    needs: [ java-metric-limiter-e2e-test ]
+    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-eks-e2e-test.yml@consolidate-release
+    secrets: inherit
+    with:
+      aws-region: us-east-1
+      test-cluster-name: 'e2e-cw-agent-test'
+      caller-workflow-name: 'main-build'
+      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
+
+  python-ec2-default-e2e-test:
+    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-default-e2e-test.yml@consolidate-release
+    secrets: inherit
+    with:
+      aws-region: us-east-1
+      caller-workflow-name: 'main-build'
+      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+
+  python-ec2-asg-e2e-test:
+    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-asg-e2e-test.yml@consolidate-release
+    secrets: inherit
+    with:
+      aws-region: us-east-1
+      caller-workflow-name: 'main-build'
+      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
