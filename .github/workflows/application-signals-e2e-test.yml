@@ -23,6 +23,10 @@ jobs:
     outputs:
       cw_agent_image_ecr: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}
       cw_agent_rpm_bucket: s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+    steps:
+      - name: Echo test plan matrix
+        run: |
+          echo "HELLO"
           
   java-eks-e2e-test:
     needs: [ GenerateOutput ]
