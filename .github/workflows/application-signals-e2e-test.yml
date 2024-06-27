@@ -8,17 +8,17 @@ name: E2E Testing
 on:
   workflow_call:
 
-concurrency:
-  group: '${{ github.workflow }} @ ${{ inputs.aws-region }}'
-  cancel-in-progress: false
-
 permissions:
   id-token: write
   contents: read
 
+concurrency:
+  group: '${{ github.workflow }} @ ${{ inputs.aws-region }}'
+  cancel-in-progress: false
+
 env:
   CW_AGENT_IMAGE_ECR: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}
-  CW_AGENT_RPM_BUCKET: s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+  CW_AGENT_RPM_BUCKET: "s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm"
 
 jobs:
   java-eks-e2e-test:
