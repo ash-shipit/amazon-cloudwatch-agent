@@ -16,68 +16,76 @@ concurrency:
   group: '${{ github.workflow }} @ ${{ inputs.aws-region }}'
   cancel-in-progress: false
 
-env:
-  CW_AGENT_IMAGE_ECR: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}
-  CW_AGENT_RPM_BUCKET: "s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm"
-
 jobs:
+  GenerateOutput:
+    name: 'GenerateOutput'
+    runs-on: ubuntu-latest
+    outputs:
+      cw_agent_image_ecr: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}
+      cw_agent_rpm_bucket: s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+          
   java-eks-e2e-test:
+    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
       aws-region: us-east-1
       test-cluster-name: 'e2e-cw-agent-test'
       caller-workflow-name: 'main-build'
-      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
+      patch-image-ecr: ${{ needs.GenerateOutput.outputs.cw_agent_image_ecr }}
 
   java-ec2-default-e2e-test:
+    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-default-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
       aws-region: us-east-1
       caller-workflow-name: 'main-build'
-      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+      cw-agent-rpm: ${{ needs.GenerateOutput.outputs.cw_agent_rpm_bucket }}
 
   java-ec2-asg-e2e-test:
+    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-asg-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
       aws-region: us-east-1
       caller-workflow-name: 'main-build'
-      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+      cw-agent-rpm: ${{ needs.GenerateOutput.outputs.cw_agent_rpm_bucket }}
 
   java-metric-limiter-e2e-test:
-    needs: [ java-eks-e2e-test ]
+    needs: [ GenerateOutput, java-eks-e2e-test ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
       aws-region: us-east-1
       test-cluster-name: 'e2e-cw-agent-test'
       caller-workflow-name: 'main-build'
-      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
+      patch-image-ecr: ${{ needs.GenerateOutput.outputs.cw_agent_image_ecr }}
 
   python-eks-e2e-test:
-    needs: [ java-metric-limiter-e2e-test ]
+    needs: [ GenerateOutput, java-metric-limiter-e2e-test ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-eks-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
       aws-region: us-east-1
       test-cluster-name: 'e2e-cw-agent-test'
       caller-workflow-name: 'main-build'
-      patch-image-ecr: ${{ env.CW_AGENT_IMAGE_ECR }}
+      patch-image-ecr: ${{ needs.GenerateOutput.outputs.cw_agent_image_ecr }}
 
   python-ec2-default-e2e-test:
+    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-default-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
       aws-region: us-east-1
       caller-workflow-name: 'main-build'
-      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+      cw-agent-rpm: ${{ needs.GenerateOutput.outputs.cw_agent_rpm_bucket }}
 
   python-ec2-asg-e2e-test:
+    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-asg-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
       aws-region: us-east-1
       caller-workflow-name: 'main-build'
-      cw-agent-rpm: ${{ env.CW_AGENT_RPM_BUCKET }}
+      cw-agent-rpm: ${{ needs.GenerateOutput.outputs.cw_agent_rpm_bucket }}

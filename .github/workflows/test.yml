@@ -62,26 +62,26 @@ jobs:
 #      contents: read
 #    secrets: inherit
 #
-#  ApplicationSignalsEndToEndTest:
-#    name: "Application Signals E2E Test"
-#    needs: [ BuildAndUpload, BuildDocker ]
-#    uses: ./.github/workflows/application-signals-e2e-test.yml
-#    secrets: inherit
-#    permissions:
-#      id-token: write
-#      contents: read
-
-  java-eks-e2e-test:
-    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
+  ApplicationSignalsEndToEndTest:
+    name: "Application Signals E2E Test"
+    needs: [ BuildAndUpload, BuildDocker ]
+    uses: ./.github/workflows/application-signals-e2e-test.yml
     secrets: inherit
     permissions:
       id-token: write
       contents: read
-    with:
-      aws-region: us-east-1
-      test-cluster-name: 'e2e-cw-agent-test'
-      caller-workflow-name: 'main-build'
-      patch-image-ecr: "${{ env.CW_AGENT_IMAGE_ECR }}"
+
+#  java-eks-e2e-test:
+#    uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
+#    secrets: inherit
+#    permissions:
+#      id-token: write
+#      contents: read
+#    with:
+#      aws-region: us-east-1
+#      test-cluster-name: 'e2e-cw-agent-test'
+#      caller-workflow-name: 'main-build'
+#      patch-image-ecr: "${{ env.CW_AGENT_IMAGE_ECR }}"
 
 
 #  java-ec2-default-e2e-test:
