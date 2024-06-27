@@ -59,3 +59,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    with:
+      cw-agent-image-ecr: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}
+      cw-agent-rpm-bucket: s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm

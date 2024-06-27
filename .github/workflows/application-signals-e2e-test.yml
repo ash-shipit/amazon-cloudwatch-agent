@@ -7,6 +7,13 @@
 name: E2E Testing
 on:
   workflow_call:
+    inputs:
+      cw-agent-image-ecr:
+        required: true
+        type: string
+      cw-agent-rpm-bucket:
+        required: true
+        type: string
 
 concurrency:
   group: '${{ github.workflow }} @ ${{ inputs.aws-region }}'
@@ -24,7 +31,7 @@ jobs:
       aws-region: us-east-1
       test-cluster-name: 'e2e-cw-agent-test'
       caller-workflow-name: 'main-build'
-      patch-image-ecr: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}
+      patch-image-ecr: ${{ inputs.cw-agent-image-ecr }}
 
   java-ec2-default-e2e-test:
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-default-e2e-test.yml@consolidate-release
@@ -32,7 +39,7 @@ jobs:
     with:
       aws-region: us-east-1
       caller-workflow-name: 'main-build'
-      cw-agent-rpm: s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+      cw-agent-rpm: ${{ inputs.cw-agent-rpm-bucket }}
 
   java-ec2-asg-e2e-test:
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-asg-e2e-test.yml@consolidate-release
@@ -40,7 +47,7 @@ jobs:
     with:
       aws-region: us-east-1
       caller-workflow-name: 'main-build'
-      cw-agent-rpm: s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+      cw-agent-rpm: ${{ inputs.cw-agent-rpm-bucket }}
 
   java-metric-limiter-e2e-test:
     needs: [ java-eks-e2e-test ]
@@ -50,7 +57,7 @@ jobs:
       aws-region: us-east-1
       test-cluster-name: 'e2e-cw-agent-test'
       caller-workflow-name: 'main-build'
-      patch-image-ecr: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}
+      patch-image-ecr: ${{ inputs.cw-agent-image-ecr }}
 
   python-eks-e2e-test:
     needs: [ java-metric-limiter-e2e-test ]
@@ -60,7 +67,7 @@ jobs:
       aws-region: us-east-1
       test-cluster-name: 'e2e-cw-agent-test'
       caller-workflow-name: 'main-build'
-      patch-image-ecr: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}
+      patch-image-ecr: ${{ inputs.cw-agent-image-ecr }}
 
   python-ec2-default-e2e-test:
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-default-e2e-test.yml@consolidate-release
@@ -68,7 +75,7 @@ jobs:
     with:
       aws-region: us-east-1
       caller-workflow-name: 'main-build'
-      cw-agent-rpm: s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+      cw-agent-rpm: ${{ inputs.cw-agent-rpm-bucket }}
 
   python-ec2-asg-e2e-test:
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-asg-e2e-test.yml@consolidate-release
@@ -76,4 +83,4 @@ jobs:
     with:
       aws-region: us-east-1
       caller-workflow-name: 'main-build'
-      cw-agent-rpm: s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+      cw-agent-rpm: ${{ inputs.cw-agent-rpm-bucket }}
