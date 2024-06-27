@@ -29,29 +29,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  BuildAndUpload:
-    uses: ./.github/workflows/test-build.yml
-    secrets: inherit
-    permissions:
-      id-token: write
-      contents: read
-    with:
-      BucketKey: "integration-test/binary/${{ github.sha }}"
-      PackageBucketKey: "integration-test/packaging/${{ github.sha }}"
-      TerraformAWSAssumeRole: ${{ vars.TERRAFORM_AWS_ASSUME_ROLE }}
-      Bucket: ${{ vars.S3_INTEGRATION_BUCKET }}
-
-  BuildDocker:
-    needs: [ BuildAndUpload ]
-    uses: ./.github/workflows/test-build-docker.yml
-    secrets: inherit
-    permissions:
-      id-token: write
-      contents: read
-    with:
-      ContainerRepositoryNameAndTag: "cwagent-integration-test:${{ github.sha }}"
-      BucketKey: "integration-test/binary/${{ github.sha }}"
-      PackageBucketKey: "integration-test/packaging/${{ github.sha }}"
+#  BuildAndUpload:
+#    uses: ./.github/workflows/test-build.yml
+#    secrets: inherit
+#    permissions:
+#      id-token: write
+#      contents: read
+#    with:
+#      BucketKey: "integration-test/binary/${{ github.sha }}"
+#      PackageBucketKey: "integration-test/packaging/${{ github.sha }}"
+#      TerraformAWSAssumeRole: ${{ vars.TERRAFORM_AWS_ASSUME_ROLE }}
+#      Bucket: ${{ vars.S3_INTEGRATION_BUCKET }}
+#
+#  BuildDocker:
+#    needs: [ BuildAndUpload ]
+#    uses: ./.github/workflows/test-build-docker.yml
+#    secrets: inherit
+#    permissions:
+#      id-token: write
+#      contents: read
+#    with:
+#      ContainerRepositoryNameAndTag: "cwagent-integration-test:${{ github.sha }}"
+#      BucketKey: "integration-test/binary/${{ github.sha }}"
+#      PackageBucketKey: "integration-test/packaging/${{ github.sha }}"
 
 #  JavaEC2ASGEndToEndTest:
 #    name: "AppSignals E2E EC2 Test"
