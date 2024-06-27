@@ -51,11 +51,20 @@ jobs:
       BucketKey: "integration-test/binary/${{ github.sha }}"
       PackageBucketKey: "integration-test/packaging/${{ github.sha }}"
 
-  ApplicationSignalsEndToEndTest:
-    name: "Application Signals E2E Test"
+  JavaEC2ASGEndToEndTest:
+    name: "AppSignals E2E EC2 Test"
     needs: [ BuildAndUpload, BuildDocker ]
-    uses: ./.github/workflows/application-signals-e2e-test.yml
-    secrets: inherit
+    uses: ./.github/workflows/test-2.yml
     permissions:
       id-token: write
       contents: read
+    secrets: inherit
+
+#  ApplicationSignalsEndToEndTest:
+#    name: "Application Signals E2E Test"
+#    needs: [ BuildAndUpload, BuildDocker ]
+#    uses: ./.github/workflows/application-signals-e2e-test.yml
+#    secrets: inherit
+#    permissions:
+#      id-token: write
+#      contents: read
