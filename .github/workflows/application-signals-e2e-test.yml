@@ -18,22 +18,23 @@ concurrency:
 
 
 jobs:
-#  GenerateOutput:
-#    name: 'GenerateOutput'
-#    runs-on: ubuntu-latest
-#    outputs:
-#      cw_agent_image_ecr: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:8b3ef0ea9f8ded5b53d3f63af2b771996c4b749d
-#      cw_agent_rpm_bucket: s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/8b3ef0ea9f8ded5b53d3f63af2b771996c4b749d/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
-#      release_test_role_arn: arn:aws:iam:::role/${{ secrets.APP_SIGNALS_E2E_TEST_ROLE_NAME }}
-#      test: test
-#    steps:
-#      - name: Echo Outputs
-#        run: |
-#          echo "${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}"
-#          echo "s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm"
-#          echo "arn:aws:iam::${{ secrets.APP_SIGNALS_E2E_TEST_ACCOUNT_ID }}:role/${{ secrets.APP_SIGNALS_E2E_TEST_ROLE_NAME }}"
+  GenerateOutput:
+    name: 'GenerateOutput'
+    runs-on: ubuntu-latest
+    outputs:
+      cw_agent_image_ecr: ${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:8b3ef0ea9f8ded5b53d3f63af2b771996c4b749d
+      cw_agent_rpm_bucket: s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/8b3ef0ea9f8ded5b53d3f63af2b771996c4b749d/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+      release_test_role_arn: arn:aws:iam:::role/${{ secrets.APP_SIGNALS_E2E_TEST_ROLE_NAME }}
+      test: test
+    steps:
+      - name: Echo Outputs
+        run: |
+          echo "${{ secrets.AWS_ECR_PRIVATE_REGISTRY }}/cwagent-integration-test:${{ github.sha }}"
+          echo "s3://${{ secrets.S3_INTEGRATION_BUCKET }}/integration-test/binary/${{ github.sha }}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm"
+          echo "arn:aws:iam::${{ secrets.APP_SIGNALS_E2E_TEST_ACCOUNT_ID }}:role/${{ secrets.APP_SIGNALS_E2E_TEST_ROLE_NAME }}"
           
   java-eks-e2e-test:
+    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
@@ -42,6 +43,7 @@ jobs:
       caller-workflow-name: 'main-build'
 
   java-ec2-default-e2e-test:
+    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-default-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
@@ -49,6 +51,7 @@ jobs:
       caller-workflow-name: 'main-build'
 
   java-ec2-asg-e2e-test:
+    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-asg-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
