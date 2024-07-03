@@ -34,7 +34,6 @@ jobs:
 #          echo "arn:aws:iam::${{ secrets.APP_SIGNALS_E2E_TEST_ACCOUNT_ID }}:role/${{ secrets.APP_SIGNALS_E2E_TEST_ROLE_NAME }}"
           
   java-eks-e2e-test:
-    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
@@ -43,7 +42,6 @@ jobs:
       caller-workflow-name: 'main-build'
 
   java-ec2-default-e2e-test:
-    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-default-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
@@ -51,7 +49,6 @@ jobs:
       caller-workflow-name: 'main-build'
 
   java-ec2-asg-e2e-test:
-    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-ec2-asg-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
@@ -59,7 +56,7 @@ jobs:
       caller-workflow-name: 'main-build'
 
   java-metric-limiter-e2e-test:
-    needs: [ GenerateOutput, java-eks-e2e-test ]
+    needs: [ java-eks-e2e-test ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/java-eks-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
@@ -68,7 +65,7 @@ jobs:
       caller-workflow-name: 'main-build'
 
   python-eks-e2e-test:
-    needs: [ GenerateOutput, java-metric-limiter-e2e-test ]
+    needs: [ java-metric-limiter-e2e-test ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-eks-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
@@ -77,7 +74,6 @@ jobs:
       caller-workflow-name: 'main-build'
 
   python-ec2-default-e2e-test:
-    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-default-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
@@ -85,7 +81,6 @@ jobs:
       caller-workflow-name: 'main-build'
 
   python-ec2-asg-e2e-test:
-    needs: [ GenerateOutput ]
     uses: aws-observability/aws-application-signals-test-framework/.github/workflows/python-ec2-asg-e2e-test.yml@consolidate-release
     secrets: inherit
     with:
